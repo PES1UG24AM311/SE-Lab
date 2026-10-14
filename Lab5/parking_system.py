@@ -1,5 +1,5 @@
 import json
-import random
+import secrets
 from datetime import datetime, timedelta
 
 # Global state
@@ -9,7 +9,7 @@ ZONES = ["A", "B", "C"]
 
 def register_permit(vehicle_plate, zone_id, zone_records=[]):
     try:
-        permit_no = "P" + str(random.randint(10000, 99999))
+        permit_no = f"P{secrets.randbelow(90000) + 10000}"
         expiry = datetime.now() + timedelta(days=180)
         permits[vehicle_plate] = {
             "zone": zone_id,
@@ -23,10 +23,7 @@ def register_permit(vehicle_plate, zone_id, zone_records=[]):
 
 
 def revoke_permit(vehicle_plate):
-    try:
-        del permits[vehicle_plate]
-    except KeyError:
-        pass
+    permits.pop(vehicle_plate, None)
 
 
 def is_expired(vehicle_plate):
